@@ -69,18 +69,26 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void nextStep() {
     if (step == 5) {
-      submitSignup();
+      context.go('/signup-success');
       return;
     }
 
-    if (step < 6) {
-      setState(() {
-        signupError = null;
-        step++;
-      });
-    } else {
+    setState(() {
+      signupError = null;
+      step++;
+    });
+  }
+
+  void goToSuccessWithoutApi() {
+    setState(() {
+      signupError = null;
+      step = 6;
+    });
+
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (!mounted) return;
       context.go('/home');
-    }
+    });
   }
 
   Future<void> submitSignup() async {
