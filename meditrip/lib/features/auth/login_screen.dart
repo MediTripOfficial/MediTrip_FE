@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,6 +13,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool obscurePassword = true;
   bool rememberMe = false;
 
+  String email = '';
+  String password = '';
+
+  bool get isLoginEnabled =>
+      email.trim().isNotEmpty && password.trim().isNotEmpty;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,13 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
               constraints: const BoxConstraints(maxWidth: 430),
               child: Column(
                 children: [
-                  const Text(
-                    'MediTrip',
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF0052FF),
-                    ),
+                  SvgPicture.asset(
+                    'assets/images/meditrip_logo.svg',
+                    width: 180,
+                    height: 40,
                   ),
                   const SizedBox(height: 56),
 
@@ -38,6 +42,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     label: 'Email',
                     hintText: 'Text',
                     keyboardType: TextInputType.emailAddress,
+                    onChanged: (value) {
+                      setState(() {
+                        email = value;
+                      });
+                    },
                   ),
                   const SizedBox(height: 18),
 
@@ -45,6 +54,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     label: 'Password',
                     hintText: 'Text',
                     obscureText: obscurePassword,
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
@@ -88,10 +102,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     height: 58,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: isLoginEnabled
+                          ? () {
+                              context.go('/home');
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0052FF),
+                        disabledBackgroundColor: Colors.white.withOpacity(0.6),
                         foregroundColor: Colors.white,
+                        disabledForegroundColor: const Color(0xFFD1D5DB),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
@@ -116,12 +136,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      child: const Text(
-                        'Continue with Google',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Color(0xFF111827),
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/google_logo.png',
+                            width: 28,
+                            height: 28,
+                          ),
+                          const SizedBox(width: 14),
+                          const Text(
+                            'Continue with Google',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Color(0xFF111827),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -164,6 +195,7 @@ class _InputBox extends StatelessWidget {
   final bool obscureText;
   final TextInputType? keyboardType;
   final Widget? suffixIcon;
+  final ValueChanged<String>? onChanged;
 
   const _InputBox({
     required this.label,
@@ -171,11 +203,13 @@ class _InputBox extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType,
     this.suffixIcon,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: onChanged,
       obscureText: obscureText,
       keyboardType: keyboardType,
       decoration: InputDecoration(
@@ -198,10 +232,7 @@ class _InputBox extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(
-            color: Color(0xFF0052FF),
-            width: 1.5,
-          ),
+          borderSide: const BorderSide(color: Color(0xFF0052FF), width: 1.5),
         ),
       ),
     );

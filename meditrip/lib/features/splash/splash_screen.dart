@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,16 +25,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xFFF1F3F6),
+    return Scaffold(
+      backgroundColor: const Color(0xFFF1F3F6),
       body: Center(
-        child: Text(
-          'MediTrip',
-          style: TextStyle(
-            fontSize: 48,
-            fontWeight: FontWeight.w900,
-            color: Color(0xFF0052FF),
-          ),
+        child: SvgPicture.asset(
+          'assets/images/meditrip_logo.svg',
+          width: 180,
+          height: 40,
         ),
       ),
     );
