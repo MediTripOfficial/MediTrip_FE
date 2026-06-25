@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+
 import '../../../core/network/api_client.dart';
 import '../../../core/network/api_endpoints.dart';
 
@@ -40,7 +41,7 @@ class AuthApi {
         },
       );
 
-      return response.data;
+      return Map<String, dynamic>.from(response.data);
     } on DioException catch (e) {
       throw Exception(e.response?.data ?? 'Signup failed');
     }
