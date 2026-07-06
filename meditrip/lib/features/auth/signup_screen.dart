@@ -23,6 +23,11 @@ class _SignupScreenState extends State<SignupScreen> {
   bool agreeMedical = false;
   bool agreeMarketing = false;
 
+  bool isSendingCode = false;
+  bool isCheckingCode = false;
+  bool isEmailVerified = false;
+  String? emailVerificationMessage;
+
   String fullName = '';
   String nickName = '';
   String email = '';
@@ -48,7 +53,9 @@ class _SignupScreenState extends State<SignupScreen> {
       case 1:
         return fullName.trim().isNotEmpty && nickName.trim().isNotEmpty;
       case 2:
-        return email.trim().isNotEmpty && verificationCode.trim().isNotEmpty;
+        return email.trim().isNotEmpty &&
+            verificationCode.trim().isNotEmpty &&
+            isEmailVerified;
       case 3:
         return password.trim().length >= 6 && password == confirmPassword;
       case 4:
@@ -60,8 +67,7 @@ class _SignupScreenState extends State<SignupScreen> {
             height.trim().isNotEmpty &&
             condition.trim().isNotEmpty &&
             (condition != 'Allergies' || allergy.trim().isNotEmpty);
-      case 6:
-        return true;
+
       default:
         return false;
     }
@@ -69,7 +75,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void nextStep() {
     if (step == 5) {
-      context.go('/signup-success');
+      submitSignup();
       return;
     }
 
@@ -80,15 +86,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void goToSuccessWithoutApi() {
-    setState(() {
-      signupError = null;
-      step = 6;
-    });
-
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      if (!mounted) return;
-      context.go('/home');
-    });
+    context.go('/signup-success');
   }
 
   Future<void> submitSignup() async {
@@ -106,20 +104,23 @@ class _SignupScreenState extends State<SignupScreen> {
         weight: double.tryParse(weight.trim()) ?? 0.1,
         height: double.tryParse(height.trim()) ?? 0.1,
         birth: birth.trim(),
-        gender: gender.trim(),
-        country: country.trim(),
-        underlyingDisease:
-            condition.trim().isEmpty ||
-                condition == 'None' ||
-                condition == 'Allergies'
+        gender: getGenderCode(),
+        country: getCountryCode(country),
+        underlyingDisease: condition == 'None' || condition.isEmpty
             ? []
-            : [condition.trim()],
-        allergies: condition == 'Allergies' && allergy.trim().isNotEmpty
-            ? [allergy.trim()]
+            : condition == 'Allergies'
+            ? []
+            : [condition],
+        allergies: condition == 'Allergies'
+            ? allergy
+                  .split(',')
+                  .map((e) => e.trim())
+                  .where((e) => e.isNotEmpty)
+                  .toList()
             : [],
         profileImg: '',
         verifiedToken: verifiedToken,
-        marketingTermsAgreed: agreeMarketing,
+        isMarketingTermsAgreed: agreeMarketing,
       );
 
       final accessToken = result['accessToken'];
@@ -130,9 +131,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
       if (!mounted) return;
 
-      setState(() {
-        step = 6;
-      });
+      context.go('/signup-success');
     } catch (e) {
       setState(() {
         signupError = e.toString();
@@ -141,6 +140,147 @@ class _SignupScreenState extends State<SignupScreen> {
       if (mounted) {
         setState(() {
           isSubmitting = false;
+        });
+      }
+    }
+  }
+
+  String getGenderCode() {
+    switch (gender) {
+      case 'Male':
+        return 'M';
+      case 'Female':
+        return 'F';
+      default:
+        return '';
+    }
+  }
+
+  String getCountryCode(String country) {
+    const map = {
+      'Korea': 'KR',
+      'United States': 'US',
+      'China': 'CN',
+      'Japan': 'JP',
+      'United Kingdom': 'GB',
+      'Vietnam': 'VN',
+      'Taiwan': 'TW',
+      'Hong Kong': 'HK',
+      'Thailand': 'TH',
+      'Philippines': 'PH',
+      'Singapore': 'SG',
+      'Malaysia': 'MY',
+      'Indonesia': 'ID',
+      'India': 'IN',
+      'Australia': 'AU',
+      'Canada': 'CA',
+      'Germany': 'DE',
+      'France': 'FR',
+      'Italy': 'IT',
+      'Spain': 'ES',
+      'Russia': 'RU',
+      'Brazil': 'BR',
+      'Mexico': 'MX',
+      'Netherlands': 'NL',
+      'Switzerland': 'CH',
+      'Sweden': 'SE',
+      'Norway': 'NO',
+      'Denmark': 'DK',
+      'Finland': 'FI',
+      'Belgium': 'BE',
+      'Austria': 'AT',
+      'Ireland': 'IE',
+      'New Zealand': 'NZ',
+      'Turkey': 'TR',
+      'Saudi Arabia': 'SA',
+      'United Arab Emirates': 'AE',
+      'Israel': 'IL',
+      'South Africa': 'ZA',
+      'Egypt': 'EG',
+      'Poland': 'PL',
+      'Portugal': 'PT',
+      'Greece': 'GR',
+      'Czech Republic': 'CZ',
+      'Hungary': 'HU',
+      'Romania': 'RO',
+      'Ukraine': 'UA',
+      'Argentina': 'AR',
+      'Chile': 'CL',
+      'Colombia': 'CO',
+      'Peru': 'PE',
+    };
+
+    return map[country] ?? country;
+  }
+
+  Future<void> sendVerificationCode() async {
+    if (email.trim().isEmpty) {
+      setState(() {
+        emailVerificationMessage = 'Please enter your email.';
+      });
+      return;
+    }
+
+    setState(() {
+      isSendingCode = true;
+      isEmailVerified = false;
+      emailVerificationMessage = null;
+    });
+
+    try {
+      final result = await authApi.sendEmailVerification(email: email.trim());
+
+      setState(() {
+        emailVerificationMessage =
+            result['message']?.toString() ?? 'Verification code sent.';
+      });
+    } catch (e) {
+      setState(() {
+        emailVerificationMessage = e.toString();
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          isSendingCode = false;
+        });
+      }
+    }
+  }
+
+  Future<void> checkVerificationCode() async {
+    if (email.trim().isEmpty || verificationCode.trim().isEmpty) {
+      setState(() {
+        emailVerificationMessage = 'Please enter email and code.';
+      });
+      return;
+    }
+
+    setState(() {
+      isCheckingCode = true;
+      emailVerificationMessage = null;
+    });
+
+    try {
+      final token = await authApi.checkEmailVerification(
+        email: email.trim(),
+        authCode: verificationCode.trim(),
+      );
+
+      setState(() {
+        verifiedToken = token;
+        isEmailVerified = true;
+        emailVerificationMessage = 'Email verified successfully.';
+      });
+    } catch (e) {
+      setState(() {
+        isEmailVerified = false;
+        verifiedToken = '';
+        emailVerificationMessage = e.toString();
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          isCheckingCode = false;
         });
       }
     }
@@ -272,13 +412,26 @@ class _SignupScreenState extends State<SignupScreen> {
   void showCountryPicker() {
     showOptionBottomSheet(
       options: [
+        'Korea',
+        'United States',
         'China',
         'Japan',
-        'U.S',
-        'Korea',
-        'Thailand',
+        'United Kingdom',
         'Vietnam',
+        'Taiwan',
+        'Hong Kong',
+        'Thailand',
+        'Philippines',
+        'Singapore',
+        'Malaysia',
+        'Indonesia',
+        'India',
+        'Australia',
+        'Canada',
+        'Germany',
         'France',
+        'Italy',
+        'Spain',
       ],
       selectedValue: country,
       onSelected: (value) {
@@ -392,11 +545,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ],
               const SizedBox(height: 12),
               _BottomButton(
-                text: isSubmitting
-                    ? 'Loading...'
-                    : step == 6
-                    ? 'Start'
-                    : 'Next',
+                text: isSubmitting ? 'Loading...' : 'Next',
                 enabled: !isSubmitting && canNext,
                 onPressed: nextStep,
               ),
@@ -421,8 +570,7 @@ class _SignupScreenState extends State<SignupScreen> {
         return _ProfileStep();
       case 5:
         return _HealthStep();
-      case 6:
-        return _SuccessStep();
+
       default:
         return const SizedBox();
     }
@@ -562,25 +710,52 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
         const SizedBox(height: 34),
+
         _InputBox(
           key: const ValueKey('email_input'),
           label: 'Email',
           hintText: 'Input your email',
           keyboardType: TextInputType.emailAddress,
-          suffixText: 'Send',
-          onChanged: (v) => setState(() => email = v),
+          suffixText: isSendingCode ? 'Sending' : 'Send',
+          onSuffixTap: isSendingCode ? null : sendVerificationCode,
+          onChanged: (v) => setState(() {
+            email = v;
+            isEmailVerified = false;
+            verifiedToken = '';
+          }),
         ),
+
         const SizedBox(height: 18),
+
         _InputBox(
           key: const ValueKey('verification_code_input'),
           label: 'Verification code',
           hintText: 'Input code',
-          suffixText: 'Check',
+          suffixText: isCheckingCode
+              ? 'Checking'
+              : isEmailVerified
+              ? 'Done'
+              : 'Check',
+          onSuffixTap: isCheckingCode || isEmailVerified
+              ? null
+              : checkVerificationCode,
           onChanged: (v) => setState(() {
             verificationCode = v;
-            verifiedToken = v;
+            isEmailVerified = false;
+            verifiedToken = '';
           }),
         ),
+
+        if (emailVerificationMessage != null) ...[
+          const SizedBox(height: 12),
+          Text(
+            emailVerificationMessage!,
+            style: TextStyle(
+              fontSize: 13,
+              color: isEmailVerified ? Colors.green : Colors.red,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -819,31 +994,6 @@ class _SignupScreenState extends State<SignupScreen> {
       },
     );
   }
-
-  Widget _SuccessStep() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.check_circle_rounded, size: 96, color: Color(0xFF0052FF)),
-          SizedBox(height: 28),
-          Text(
-            'Sign Up Complete!',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF111827),
-            ),
-          ),
-          SizedBox(height: 12),
-          Text(
-            'Welcome to MediTrip.',
-            style: TextStyle(fontSize: 18, color: Color(0xFF9AA3B2)),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class _Header extends StatelessWidget {
@@ -924,6 +1074,7 @@ class _InputBox extends StatelessWidget {
   final int? maxLength;
   final String? suffixText;
   final ValueChanged<String>? onChanged;
+  final VoidCallback? onSuffixTap;
 
   const _InputBox({
     super.key,
@@ -934,6 +1085,7 @@ class _InputBox extends StatelessWidget {
     this.maxLength,
     this.suffixText,
     this.onChanged,
+    this.onSuffixTap,
   });
 
   @override
@@ -949,13 +1101,22 @@ class _InputBox extends StatelessWidget {
         counterStyle: const TextStyle(color: Color(0xFF9AA3B2)),
         suffixIcon: suffixText == null
             ? null
-            : Center(
-                widthFactor: 1,
-                child: Text(
-                  suffixText!,
-                  style: const TextStyle(
-                    color: Color(0xFFD1D5DB),
-                    fontWeight: FontWeight.w600,
+            : InkWell(
+                onTap: onSuffixTap,
+                borderRadius: BorderRadius.circular(8),
+                child: Center(
+                  widthFactor: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      suffixText!,
+                      style: TextStyle(
+                        color: onSuffixTap == null
+                            ? const Color(0xFFD1D5DB)
+                            : const Color(0xFF0052FF),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ),
