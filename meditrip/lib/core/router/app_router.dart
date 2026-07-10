@@ -7,6 +7,7 @@ import '../../features/home/home_screen.dart';
 import '../../features/medication/medication_detail_screen.dart';
 import '../../features/medication/recent_medication_screen.dart';
 import '../../features/splash/splash_screen.dart';
+import '../../features/symptom/symptom_chat_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -27,6 +28,12 @@ final appRouter = GoRouter(
       path: '/recent-medication',
       builder: (context, state) {
         return const RecentMedicationScreen();
+      },
+    ),
+    GoRoute(
+      path: '/symptom-chat',
+      builder: (context, state) {
+        return const SymptomChatScreen();
       },
     ),
   ],

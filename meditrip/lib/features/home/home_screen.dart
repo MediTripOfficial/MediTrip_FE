@@ -244,44 +244,49 @@ class _SymptomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 80,
-      padding: const EdgeInsets.symmetric(horizontal: 28),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0049E6),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.sick_rounded, color: Colors.white, size: 40),
-          const SizedBox(width: 12),
-          const Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Where does it hurt?',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+    return InkWell(
+      onTap: () {
+        context.push('/symptom-chat');
+      },
+      borderRadius: BorderRadius.circular(24),
+      child: Ink(
+        height: 80,
+        padding: const EdgeInsets.symmetric(horizontal: 28),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0049E6),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.sick_rounded, color: Colors.white, size: 40),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Where does it hurt?',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-
-                Text(
-                  'Enter symptoms.',
-                  style: TextStyle(fontSize: 14, color: Colors.white),
-                ),
-              ],
+                  Text(
+                    'Enter symptoms.',
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Icon(
-            Icons.chevron_right_rounded,
-            size: 24,
-            color: Colors.white.withOpacity(0.95),
-          ),
-        ],
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 24,
+              color: Colors.white.withOpacity(0.95),
+            ),
+          ],
+        ),
       ),
     );
   }
