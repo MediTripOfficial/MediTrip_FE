@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+
 import '../../../core/network/api_client.dart';
 import '../../../core/network/api_endpoints.dart';
 
@@ -17,7 +18,7 @@ class AuthApi {
     required List<String> allergies,
     required String profileImg,
     required String verifiedToken,
-    required bool marketingTermsAgreed,
+    required bool isMarketingTermsAgreed,
   }) async {
     try {
       final response = await ApiClient.dio.post(
@@ -36,13 +37,50 @@ class AuthApi {
           'allergies': allergies,
           'profileImg': profileImg,
           'verifiedToken': verifiedToken,
-          'marketingTermsAgreed': marketingTermsAgreed,
+          'isMarketingTermsAgreed': isMarketingTermsAgreed,
         },
       );
 
-      return response.data;
+      return Map<String, dynamic>.from(response.data);
     } on DioException catch (e) {
       throw Exception(e.response?.data ?? 'Signup failed');
+    }
+  }
+
+  Future<Map<String, dynamic>> sendEmailVerification({
+    required String email,
+  }) async {
+    try {
+      final response = await ApiClient.dio.post(
+        ApiEndpoints.sendEmailVerification,
+        data: {'email': email.trim()},
+      );
+
+      return Map<String, dynamic>.from(response.data);
+    } on DioException catch (e) {
+      print('TYPE: ${e.type}');
+      print('ERROR: ${e.error}');
+      print('STATUS: ${e.response?.statusCode}');
+      print('DATA: ${e.response?.data}');
+      print('MESSAGE: ${e.message}');
+
+      throw Exception('Failed to send verification email');
+    }
+  }
+
+  Future<String> checkEmailVerification({
+    required String email,
+    required String authCode,
+  }) async {
+    try {
+      final response = await ApiClient.dio.patch(
+        ApiEndpoints.checkEmailVerification,
+        data: {'email': email, 'authCode': authCode},
+      );
+
+      return response.data['verifiedToken'] as String;
+    } on DioException catch (e) {
+      throw Exception(e.response?.data ?? 'Failed to verify email');
     }
   }
 }

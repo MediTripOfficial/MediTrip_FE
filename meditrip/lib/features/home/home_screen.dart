@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'widgets/custom_bottom_nav_bar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -46,12 +47,12 @@ class HomeScreen extends StatelessWidget {
                   const Text(
                     'Phrases',
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 20,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFF5F6675),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
 
                   GridView.count(
                     crossAxisCount: 2,
@@ -67,7 +68,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                       _PhraseCard(
                         title: 'Conversation',
-                        description: 'Useful phrases for clinic\nvisits and pharmacies.',
+                        description:
+                            'Useful phrases for clinic\nvisits and pharmacies.',
                       ),
                       _PhraseCard(
                         title: 'Medication',
@@ -150,10 +152,7 @@ class _CurrentMedicationCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       'Details',
-                      style: TextStyle(
-                        fontSize: 19,
-                        color: Color(0xFF9AA3B2),
-                      ),
+                      style: TextStyle(fontSize: 19, color: Color(0xFF9AA3B2)),
                     ),
                   ],
                 ),
@@ -192,7 +191,7 @@ class _SymptomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 122,
+      height: 80,
       padding: const EdgeInsets.symmetric(horizontal: 28),
       decoration: BoxDecoration(
         color: const Color(0xFF0049E6),
@@ -200,12 +199,8 @@ class _SymptomCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(
-            Icons.sick_rounded,
-            color: Colors.white,
-            size: 56,
-          ),
-          const SizedBox(width: 22),
+          const Icon(Icons.sick_rounded, color: Colors.white, size: 40),
+          const SizedBox(width: 12),
           const Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -214,25 +209,22 @@ class _SymptomCard extends StatelessWidget {
                 Text(
                   'Where does it hurt?',
                   style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 4),
+
                 Text(
                   'Enter symptoms.',
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.white),
                 ),
               ],
             ),
           ),
           Icon(
             Icons.chevron_right_rounded,
-            size: 44,
+            size: 24,
             color: Colors.white.withOpacity(0.95),
           ),
         ],
@@ -247,7 +239,7 @@ class _BannerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150,
+      height: 114,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: const Color(0xFFE3EDFF),
@@ -260,7 +252,7 @@ class _BannerCard extends StatelessWidget {
             child: Text(
               'Banner\nAdvertising',
               style: TextStyle(
-                fontSize: 42,
+                fontSize: 30,
                 height: 1.1,
                 fontWeight: FontWeight.w900,
                 color: Color(0xFF0049E6),
@@ -278,10 +270,7 @@ class _BannerCard extends StatelessWidget {
               ),
               child: const Text(
                 '03 / 28   More',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
           ),
@@ -295,10 +284,7 @@ class _PhraseCard extends StatelessWidget {
   final String title;
   final String description;
 
-  const _PhraseCard({
-    required this.title,
-    required this.description,
-  });
+  const _PhraseCard({required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -311,25 +297,21 @@ class _PhraseCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.sick_rounded,
-            size: 45,
-            color: Color(0xFF111827),
-          ),
+          const Icon(Icons.sick_rounded, size: 40, color: Color(0xFF111827)),
           const Spacer(),
           Text(
             title,
             style: const TextStyle(
-              fontSize: 22,
+              fontSize: 16,
               fontWeight: FontWeight.w800,
               color: Color(0xFF111827),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             description,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               height: 1.35,
               color: Color(0xFF9AA3B2),
             ),

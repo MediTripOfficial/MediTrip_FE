@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'core/router/app_router.dart';
 
 void main() {
@@ -15,11 +16,9 @@ class MediTripApp extends StatelessWidget {
       title: 'MediTrip',
       routerConfig: appRouter,
       theme: ThemeData(
-        fontFamily: 'Pretendard',
+        fontFamily: 'NotoSans',
         scaffoldBackgroundColor: const Color(0xFFF1F3F6),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0052FF),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0052FF)),
       ),
     );
   }
