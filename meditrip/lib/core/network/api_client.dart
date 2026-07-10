@@ -4,7 +4,7 @@ class ApiClient {
   static final Dio dio =
       Dio(
           BaseOptions(
-            baseUrl: 'http://13.125.83.2:8080/',
+            baseUrl: 'https://api.meditrip.co.kr',
             connectTimeout: const Duration(seconds: 15),
             receiveTimeout: const Duration(seconds: 15),
             sendTimeout: const Duration(seconds: 15),
