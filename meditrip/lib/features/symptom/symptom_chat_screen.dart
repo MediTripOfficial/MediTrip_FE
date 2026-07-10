@@ -103,8 +103,10 @@ class _SymptomChatScreenState extends State<SymptomChatScreen> {
                   onPressed: selectedSymptoms.isEmpty
                       ? null
                       : () {
-                          // 추후 분석 결과 페이지 또는 API 연결
-                          debugPrint('Selected symptoms: $selectedSymptoms');
+                          context.push(
+                            '/symptom-analyzing',
+                            extra: selectedSymptoms,
+                          );
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryBlue,
