@@ -4,8 +4,9 @@ import '../../features/auth/login_screen.dart';
 import '../../features/auth/signup_screen.dart';
 import '../../features/auth/signup_success_screen.dart';
 import '../../features/home/home_screen.dart';
-import '../../features/splash/splash_screen.dart';
 import '../../features/medication/medication_detail_screen.dart';
+import '../../features/medication/recent_medication_screen.dart';
+import '../../features/splash/splash_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
@@ -21,6 +22,12 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/recent-medication-detail',
       builder: (context, state) => const MedicationDetailScreen(),
+    ),
+    GoRoute(
+      path: '/recent-medication',
+      builder: (context, state) {
+        return const RecentMedicationScreen();
+      },
     ),
   ],
 );

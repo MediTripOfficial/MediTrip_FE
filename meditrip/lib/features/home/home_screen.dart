@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'widgets/custom_bottom_nav_bar.dart';
 
@@ -102,84 +103,137 @@ class _CurrentMedicationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(22, 22, 22, 24),
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 18, 16, 14),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withOpacity(0.95),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Current Medications',
+            'Recent Medications',
             style: TextStyle(
-              fontSize: 21,
+              fontSize: 20,
               fontWeight: FontWeight.w700,
               color: Color(0xFF6B7280),
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Container(
-                width: 110,
-                height: 68,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FB),
+          const SizedBox(height: 12),
+
+          InkWell(
+            onTap: () {
+              context.push('/recent-medication');
+            },
+            borderRadius: BorderRadius.circular(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.medication_liquid_rounded,
-                    size: 44,
-                    color: Color(0xFFEF4444),
+                  child: Container(
+                    width: 112,
+                    height: 72,
+                    color: const Color(0xFFF8F9FB),
+                    child: Image.asset(
+                      'assets/images/tylenol.png',
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) {
+                        return const Icon(
+                          Icons.medication_rounded,
+                          size: 42,
+                          color: Color(0xFFEF4444),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 18),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Medicine Name',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF111827),
+                const SizedBox(width: 12),
+
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _PurchasedBadge(),
+                      SizedBox(height: 8),
+                      Text(
+                        'Tylenol',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF111827),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Details',
-                      style: TextStyle(fontSize: 19, color: Color(0xFF9AA3B2)),
-                    ),
-                  ],
+                      SizedBox(height: 2),
+                      Text(
+                        'Johnson & Johnson',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF9AA3B2),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  size: 34,
+                  color: Color(0xFF9AA3B2),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 18),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                'View Details',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF0049E6),
+
+          const SizedBox(height: 16),
+
+          SizedBox(
+            width: double.infinity,
+            height: 52,
+            child: OutlinedButton(
+              onPressed: () {
+                // 추후 리뷰 화면 연결
+                // context.push('/write-review');
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFF111827),
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: Color(0xFFD1D5DB), width: 1.2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
-              SizedBox(width: 10),
-              Icon(
-                Icons.chevron_right_rounded,
-                size: 32,
-                color: Color(0xFF0049E6),
+              child: const Text(
+                'Write a Review',
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
               ),
-            ],
+            ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _PurchasedBadge extends StatelessWidget {
+  const _PurchasedBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE5E7EB),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: const Text(
+        'Purchased 2 days ago',
+        style: TextStyle(
+          fontSize: 13,
+          color: Color(0xFF374151),
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

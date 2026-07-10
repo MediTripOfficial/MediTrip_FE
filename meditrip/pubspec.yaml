@@ -63,6 +63,7 @@ flutter:
     - assets/images/meditrip_logo.svg
     - assets/images/google_logo.png
     - assets/images/success_logo.png
+    - assets/images/tylenol.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
