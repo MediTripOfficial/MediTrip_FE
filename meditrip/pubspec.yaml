@@ -67,7 +67,10 @@ flutter:
     - assets/images/thermometer.png
     - assets/images/suspen.png
     - assets/images/paracap.png
-    - assets/icons/
+    - assets/icons/conversation_icon.png
+    - assets/icons/medication_icon.png
+    - assets/icons/symptom_icon.png
+    - assets/icons/treatment_icon.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
