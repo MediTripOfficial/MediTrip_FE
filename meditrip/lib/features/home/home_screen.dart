@@ -65,26 +65,26 @@ class HomeScreen extends StatelessWidget {
                     children: const [
                       _PhraseCard(
                         category: 'treatment',
-                        iconAsset: 'assets/images/treatment_icon.png',
+                        iconAsset: 'assets/icons/treatment_icon.png',
                         title: 'Treatment',
                         description: 'Show phrases to your\ndoctor.',
                       ),
                       _PhraseCard(
                         category: 'conversation',
-                        iconAsset: 'assets/images/conversation_icon.png',
+                        iconAsset: 'assets/icons/conversation_icon.png',
                         title: 'Conversation',
                         description:
                             'Useful phrases for clinic\nvisits and pharmacies.',
                       ),
                       _PhraseCard(
                         category: 'medication',
-                        iconAsset: 'assets/images/medication_icon.png',
+                        iconAsset: 'assets/icons/medication_icon.png',
                         title: 'Medication',
                         description: 'Medication related\nphrases.',
                       ),
                       _PhraseCard(
                         category: 'symptom',
-                        iconAsset: 'assets/images/symptom_icon.png',
+                        iconAsset: 'assets/icons/symptom_icon.png',
                         title: 'Symptom',
                         description: 'Explain your symptoms\nmore clearly.',
                       ),
