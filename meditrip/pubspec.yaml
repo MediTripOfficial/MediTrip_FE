@@ -67,6 +67,7 @@ flutter:
     - assets/images/thermometer.png
     - assets/images/suspen.png
     - assets/images/paracap.png
+    - assets/icons/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

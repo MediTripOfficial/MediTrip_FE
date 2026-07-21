@@ -64,21 +64,29 @@ class HomeScreen extends StatelessWidget {
                     childAspectRatio: 1.15,
                     children: const [
                       _PhraseCard(
+                        category: 'treatment',
+                        iconAsset: 'assets/images/treatment_icon.png',
                         title: 'Treatment',
                         description: 'Show phrases to your\ndoctor.',
                       ),
                       _PhraseCard(
+                        category: 'conversation',
+                        iconAsset: 'assets/images/conversation_icon.png',
                         title: 'Conversation',
                         description:
                             'Useful phrases for clinic\nvisits and pharmacies.',
                       ),
                       _PhraseCard(
+                        category: 'medication',
+                        iconAsset: 'assets/images/medication_icon.png',
                         title: 'Medication',
                         description: 'Medication related\nphrases.',
                       ),
                       _PhraseCard(
-                        title: 'Emergency',
-                        description: 'Emergency phrases\nfor urgent cases.',
+                        category: 'symptom',
+                        iconAsset: 'assets/images/symptom_icon.png',
+                        title: 'Symptom',
+                        description: 'Explain your symptoms\nmore clearly.',
                       ),
                     ],
                   ),
@@ -340,42 +348,69 @@ class _BannerCard extends StatelessWidget {
 }
 
 class _PhraseCard extends StatelessWidget {
+  final String category;
+  final String iconAsset;
   final String title;
   final String description;
 
-  const _PhraseCard({required this.title, required this.description});
+  const _PhraseCard({
+    required this.category,
+    required this.iconAsset,
+    required this.title,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.95),
+    return Material(
+      color: Colors.white.withOpacity(0.95),
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        onTap: () {
+          context.push('/phrases/$category');
+        },
         borderRadius: BorderRadius.circular(22),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.sick_rounded, size: 40, color: Color(0xFF111827)),
-          const Spacer(),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF111827),
-            ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.asset(
+                iconAsset,
+                width: 42,
+                height: 42,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) {
+                  return const Icon(
+                    Icons.chat_bubble_outline_rounded,
+                    size: 40,
+                    color: Color(0xFF111827),
+                  );
+                },
+              ),
+              const Spacer(),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF111827),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 12,
+                  height: 1.35,
+                  color: Color(0xFF9AA3B2),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 4),
-          Text(
-            description,
-            style: const TextStyle(
-              fontSize: 12,
-              height: 1.35,
-              color: Color(0xFF9AA3B2),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

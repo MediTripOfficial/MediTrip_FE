@@ -9,6 +9,7 @@ import '../../features/medication/medication_information_screen.dart';
 import '../../features/medication/medication_options_screen.dart';
 import '../../features/medication/models/medication_item.dart';
 import '../../features/medication/recent_medication_screen.dart';
+import '../../features/phrases/phrases_screen.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../features/symptom/symptom_analysis_result_screen.dart';
 import '../../features/symptom/symptom_analyzing_screen.dart';
@@ -75,6 +76,14 @@ final appRouter = GoRouter(
         }
 
         return MedicationInformationScreen(medication: medication);
+      },
+    ),
+    GoRoute(
+      path: '/phrases/:category',
+      builder: (context, state) {
+        final category = state.pathParameters['category'] ?? 'treatment';
+
+        return PhrasesScreen(initialCategory: category);
       },
     ),
   ],
